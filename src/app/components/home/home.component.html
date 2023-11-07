@@ -1,0 +1,21 @@
+<div class="divfondo">
+    <div class="divcuadro"> 
+        <br>
+        <br>
+        <div class="campospago">
+            <h2 class="textoELEGIR">Elija donde pagar</h2>
+            <img src="../../../assets/imagenbancocentro.jpg" class="fotocentro">
+            <input type="text" class="textboxito" placeholder="Nombre" [(ngModel)]="datos.nombre">
+            <input type="text" class="textboxito" placeholder="Apellido" [(ngModel)]="datos.apellido">
+            <h6 class="textoempresa">Seleccionar la empresa a pagar</h6>
+            <select class="textboxito" placeholder="Empresa a pagar" [(ngModel)]="datos.empresa_elegida">
+                <option  *ngFor="let emp of empresas">{{emp}}</option>
+            </select>
+            <input type="number" class="textboxito" placeholder="Importe" [(ngModel)]="datos.importe">
+            <input type="text" class="textboxito" placeholder="Tipo de tarjeta" [(ngModel)]="datos.tipo_tarjeta">
+            
+
+            <button class="textboxito" (click)="agregar()">PAGAR</button>
+        </div>
+    </div>
+</div>

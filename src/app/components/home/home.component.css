@@ -1,0 +1,58 @@
+.divfondo {
+    background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    url(../../../assets/fondobanking.jpg);
+    width: 100%;
+    height: 600px;
+}
+
+.divcuadro {
+    background: linear-gradient(rgba(252, 136, 107, 0.9), rgba(245, 101, 101, 0.9));
+    border-radius: 10px;
+    width: 67%;
+    height: 500px;
+    margin:auto;
+    bottom: -10%;
+    position: relative;
+}
+
+h2 {
+    color: black;
+    margin-left: 460px;
+    
+}
+
+.textboxito {
+    margin-left: 65%;
+    margin-top: 20px;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.fotocentro{
+    position:absolute;
+    border-radius: 30px;
+    width: 50%;
+
+}
+
+.campospago {
+    margin-left: 50px;
+}
+
+.textoempresa {
+    position:absolute;
+    margin-left: 61.2%;
+    opacity: 60%;
+}
+
+.textoELEGIR {
+    padding-left: 90px;
+}
+
+@media (max-width: 500px) {
+    .divcuadro {
+        width:40%;
+        height: 100%;
+
+    }
+}

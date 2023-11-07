@@ -1,0 +1,28 @@
+<h2 style="margin-left:20px">PAGOS</h2>
+
+<table class="table table-bordered" style="margin-left:20px">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Nombre de la Empresa</th>
+        <th>Importe</th>
+        <th>Tipo de Tarjeta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let emp of pagos">
+        <tr>
+          <td>{{ emp[0] }}</td>
+          <td>{{ emp[1] }}</td>
+          <td>{{ emp[2] }}</td>
+          <td>{{ emp[3] }}</td>
+          <td>{{emp[4]}}</td>
+          <td>{{emp[5]}}</td>
+          <button (click)="eliminar(emp[0])">eliminar</button>
+
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>

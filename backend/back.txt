@@ -1,0 +1,106 @@
+from flask import Flask,request,jsonify,json
+import mysql.connector
+from flask_cors import CORS
+from bson import json_util
+from bson.objectid import ObjectId
+
+
+app = Flask(__name__)
+CORS(app)
+
+# Configura la conexión a la base de datos
+db_config = {
+    'host': 'localhost',
+    'user': 'usuario2',
+    'password': '1234',
+    'database': 'o'
+}
+
+@app.route('/agregarCliente', methods=['POST'])
+def agregarCliente():
+
+        #defino campos recibidos
+        nombre = request.json['nombre']
+        apellido = request.json['apellido']
+        empresa_elegida=request.json['empresa_elegida']
+        importe=request.json['importe']
+        tipo_tarjeta=request.json['tipo_tarjeta']
+
+        # Establece la conexión a la base de datos
+        conn = mysql.connector.connect(**db_config)
+
+        # Crea un cursor para ejecutar la consulta SQL
+        cursor = conn.cursor()
+
+        # agrego el cliente
+        cursor.execute(f"INSERT INTO clientes(Nombre, Apellido) VALUES ('{nombre}', '{apellido}')")
+        # Obtén el ID del cliente recién insertado
+        cliente_id = cursor.lastrowid
+
+
+        # comparar empresas y elegi la que es
+        cursor.execute(f"SELECT id_empresa FROM empresa WHERE nombre_empresa='{empresa_elegida}'")
+        #guardo el resultado
+        id_empresa_=cursor.fetchall()
+
+        #agrego el pago
+        cursor.execute("INSERT INTO pagos(id_cliente, id_empresa, importe, tipo_targeta) VALUES (%s, %s, %s, %s)", (cliente_id, id_empresa_[0][0], importe, tipo_tarjeta))
+
+
+        # confirma la secuencia anterior
+        conn.commit()
+
+        # Cierra el cursor y la conexión
+        cursor.close()
+        conn.close()
+
+        # envio una señal de que funciono
+        return jsonify("se cumplio"), 200
+
+@app.route('/ObtenerEmpresas', methods=['GET'])
+def ObtenerEmpresas():
+    # Establece la conexión a la base de datos
+    conn = mysql.connector.connect(**db_config)
+
+    # Crea un cursor para ejecutar la consulta SQL
+    cursor = conn.cursor()
+
+    # obtengo empresas
+    cursor.execute("SELECT nombre_empresa FROM empresa")
+    #guardo lo que obtuve en una variable
+    lista_con_las_empresas=cursor.fetchall()
+
+    # convertir la lista de empresas a una cadena json
+    results = json_util.dumps(lista_con_las_empresas)
+
+    # cargar como objeto de json da resultado una estructura de datos json
+    results = json.loads(results)
+
+    #devuelvo el json results con el nombre de empresas y le digo 200 para la señal html para decir que llego bien el json bien
+    return jsonify({'empresas': results}), 200
+
+@app.route('/ObtenerPagos', methods=['GET'])
+def ObtenerPagos():
+    # Establece la conexión a la base de datos
+    conn = mysql.connector.connect(**db_config)
+
+    # Crea un cursor para ejecutar la consulta SQL
+    cursor = conn.cursor()
+
+    # obtengo pagos
+    cursor.execute("SELECT C.Nombre AS nombre_cliente,C.Apellido AS apellido_cliente,E.Nombre_empresa AS nombre_empresa,P.importe,P.tipo_targeta FROM pagos as P JOIN clientes AS C ON P.id_cliente = C.id_cliente JOIN empresa AS E ON P.id_empresa = E.id_empresa")
+    # guardo todos los pagos aqui
+    lista_pagos = cursor.fetchall()
+    print(lista_pagos)
+    # convertir la lista de pagos a una cadena json
+    #results1 = json_util.dumps(lista_pagos)
+
+    # cargar como objeto de json da resultado una estructura de datos json
+    #results2 = json.loads(results1)
+
+    # devuelvo el json results con todos los pagos
+    return jsonify({'pagos_completo': lista_pagos}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True,port=5000)
+
